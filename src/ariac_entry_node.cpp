@@ -317,6 +317,7 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
         }else{
             agv_name = shipment.agv_id;
         }
+        
         for (const auto &product: shipment.products) {
             ROS_INFO("type: %s", product.type.c_str());
             get_pose kit = trace_first_kit(nhandle, product.type);

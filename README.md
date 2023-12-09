@@ -37,4 +37,4 @@ These command will launch the competition
 
 ### Phase 3
 
-- Similar to Phase 2, a global counter was added to control the main behavior. The shipment will begin once TWO parts are picked up and placed
+- Similar to Phase 2, a global counter was added to control the main behavior. The shipment will begin once TWO parts are picked up and placed.
