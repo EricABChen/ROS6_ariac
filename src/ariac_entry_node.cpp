@@ -321,7 +321,7 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
             ROS_INFO("type: %s", product.type.c_str());
             get_pose kit = trace_first_kit(nhandle, product.type);
 
-            if (kit.found && count2 == 0) {
+            if (kit.found && count2 <= 1) {
                 count2 += 1;
                 auto move_base = get_trajectory_for_foundation(kit.found_pose, kit.bin, false); // move actuator
                 start_trajectory(move_base, *tc, true);

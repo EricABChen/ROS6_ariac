@@ -33,3 +33,8 @@ These command will launch the competition
 
 - Actually all the goals are acheived at this point
 - To satisfy the requirement of this phase, a global counter is intentionally created and add into the main `process` logic, this is a redundant counter and the sole purpose is to trigger a shipment and stop the whole process after the first ship
+
+
+### Phase 3
+
+- Similar to Phase 2, a global counter was added to control the main behavior. The shipment will begin once TWO parts are picked up and placed
