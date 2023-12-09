@@ -11,9 +11,6 @@ find_package(catkin REQUIRED COMPONENTS
   ecse_373_ariac
   rviz
   roscpp
-  actionlib
-  control_msgs
-  osrf_gear
 )
 
 ## System dependencies are found with CMake's conventions

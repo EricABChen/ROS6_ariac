@@ -1,40 +1,31 @@
 # ecse473_f23_axc1293_ariac_entry
-The is a new created repo under the same namespace, the previous old one was discarded because of the missing of tags
 
 ## Package description
-This new repo is a ROS package that contains the project disign & implementation of ARIAC 2019 for ECSE 473 Modern Robot Programming
+This repo is a ROS package that contains the project disign & implementation of ARIAC 2019 for ECSE 473 Modern Robot Programming, This is a new created repo under the same namespace with the previous one, which was discarded
+
+## Dependency:
+In order to run/view this model, the listed dependencies MUST be satisfied:
+-  ROS(Noetic)
+-  Ubuntu 20.04
+-  ARIAC 2019
+-  ecse_373_ariac (ARIAC expansino for Noetic)
+
+## Preliminary Steps
+Before lauching gazebo, it is necessary to ensure that the following requirements are ALL satisfied:
+- ROS(Noetic), ARIAC 2019 and ecse_373_ariac are properlyl installed on a system running Ubuntu 20.04
+- Download this package into your catkin workspace `~/<catkin_workspace>/src/`
+- Before building this project, make sure to Source ecse_373_ariac fisrt: `source ~/ecse_373_ariac/devel/setup.bash`
+- Build the package with `catkin_make`
 
 ### Launch ARIAC 2019
 
-- Source ecse_373_ariac: `source ~/ecse_373_ariac/devel/setup.bash`
-- init gazebo `roslaunch ecse_373_ariac ecse_373_ariac.launch`
+- Create terminal A, Source ecse_373_ariac: `source ~/ecse_373_ariac/devel/setup.bash`, and then:
+- init gazebo `roslaunch ecse_373_ariac ecse_373_ariac.launch` under terminal A
+
+- Create terminal B, Source the workspace for this project with `source devel/setup.bash`
 - start simulation `rosrun ariac_entry ariac_entry_node`
 
 These command will launch the competition
 
-
-### Lab5
-
-- Setup ARIAC 2019 Environment
-- Launch gazebo
-- Create basic framework
-
-### Phase 1
-
-- Use `get_trajectory_for_foundation` to correctly locate the location for the foundation
-- Use `get_trajectory_for_arm` to correctly locate the angles of the arm
-- Do them seperately to avoid collision
-- Continuously pick up a part and then drop by setting `switch_grip_status` with true and false
-- In this period the program will not tend to ship even if the correct item is picked up, and the for loop will go permenantly
-- The whole process do not rely on the previous lab 6 package, which can be found `https://github.com/EricABChen/ecse473_f23_axc1293_ik_service`
-
-
-### Phase 2
-
-- Actually all the goals are acheived at this point
-- To satisfy the requirement of this phase, a global counter is intentionally created and add into the main `process` logic, this is a redundant counter and the sole purpose is to trigger a shipment and stop the whole process after the first ship
-
-
-### Phase 3
-
-- Similar to Phase 2, a global counter was added to control the main behavior. The shipment will begin once TWO parts are picked up and placed.
+### Known Issue
+For unknown reasons, the program is not 100% stable on my laptop, in rare cases, the program finds no possible solution and will crash into something. This situation occurs around 10% during self-testing.

@@ -24,7 +24,6 @@
 #include "osrf_gear/AGVControl.h"
 
 int count1; // Global cnt for trajectory
-int count2; // Global cnt for delivered parts
 bool checker;
 actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* tc; //Trajectory
 ros::ServiceClient gclient;// gripper client
@@ -126,7 +125,7 @@ void set_orientation(geometry_msgs::Pose& the_pose){
     the_pose.orientation.z = 0.0;
 }
 
-// Get the position of actuator
+// Get the position of anbnag actuator
 double actuator_position(double position, std::string product_location) {
     if(product_location == "agv1" || product_location == "agv2"){
         return base_of_bin[product_location];
@@ -317,13 +316,11 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
         }else{
             agv_name = shipment.agv_id;
         }
-        
         for (const auto &product: shipment.products) {
             ROS_INFO("type: %s", product.type.c_str());
             get_pose kit = trace_first_kit(nhandle, product.type);
 
-            if (kit.found && count2 <= 1) {
-                count2 += 1;
+            if (kit.found) {
                 auto move_base = get_trajectory_for_foundation(kit.found_pose, kit.bin, false); // move actuator
                 start_trajectory(move_base, *tc, true);
                 geometry_msgs::TransformStamped transformStamped; // get pose
