@@ -24,6 +24,7 @@
 #include "osrf_gear/AGVControl.h"
 
 int count1; // Global cnt for trajectory
+int count2; // Global cnt for delivered parts
 bool checker;
 actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* tc; //Trajectory
 ros::ServiceClient gclient;// gripper client
@@ -320,7 +321,8 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
             ROS_INFO("type: %s", product.type.c_str());
             get_pose kit = trace_first_kit(nhandle, product.type);
 
-            if (kit.found) {
+            if (kit.found && count2 == 0) {
+                count2 += 1;
                 auto move_base = get_trajectory_for_foundation(kit.found_pose, kit.bin, false); // move actuator
                 start_trajectory(move_base, *tc, true);
                 geometry_msgs::TransformStamped transformStamped; // get pose
@@ -337,8 +339,9 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
                 auto stay_above = get_trajectory_for_arm(goal_pose.pose, 0.13, 1.5, true); // find trajectory: arm
                 start_trajectory(stay_above, *tc, true);
                 // Start grab process, turn on vacuum
-                switch_grip_status(false);
+                switch_grip_status(true);
                 auto goal_trajectory = get_trajectory_for_arm(goal_pose.pose, 0.015, 0.3, true);
+                start_trajectory(goal_trajectory, *tc, false);
                 while(!checker && ros::ok()){ // Keep trying in case the vacuum fail, them return to position
                     auto back_above_trajectory = get_trajectory_for_arm(goal_pose.pose, 0.13, 0.2, true);
                     start_trajectory(back_above_trajectory, *tc, true);
@@ -346,8 +349,64 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
                     goal_trajectory.header.stamp = ros::Time::now();
                     start_trajectory(goal_trajectory, *tc, false);
                 }
+                auto default_pose = get_trajectory_for_foundation(goal_pose.pose, kit.bin, true);
+                start_trajectory(default_pose, *tc, true);
+                // After picking up the assigned part, the next step is to put it into the correct location
+                move_base = get_trajectory_for_foundation(kit.found_pose, agv_name, false);
+                start_trajectory(move_base, *tc, true);
+                std::string agv;
+                if(agv_name=="agv1"){
+                    agv="kit_tray_1";
+                }else{
+                    agv="kit_tray_2";
+                }
+                // get pose
+                try {
+                    transformStamped = TFbuffer.lookupTransform("arm1_base_link", agv, ros::Time(0.0), ros::Duration(1.0));
+                } catch (tf2::TransformException &ex) {
+                    ROS_ERROR("%s", ex.what());
+                }
+                geometry_msgs::PoseStamped new_part_pose, new_goal_pose; // get pose from OCR camera
+                new_part_pose.pose = product.pose;
+                tf2::doTransform(new_part_pose, new_goal_pose, transformStamped);
+                set_orientation(new_goal_pose.pose);
+                auto first_pose = get_trajectory_for_arm(new_goal_pose.pose, 0.1, 2.5, false);
+                if(agv_name=="agv1"){
+                    first_pose.points[0].positions[1] = 2.1;
+                }else{
+                    first_pose.points[0].positions[1] = 4.18;
+                }
+                start_trajectory(first_pose, *tc, true);
+                goal_trajectory = get_trajectory_for_arm(new_goal_pose.pose, 0.1, 1.0, false);
+                start_trajectory(goal_trajectory, *tc, true);
                 switch_grip_status(false); // gripper off
             }
+        }
+        ros::Duration(1.0).sleep();
+        std::string agv_id=agv_name;
+        std::string shipment_name=shipment.shipment_type;
+        ros::ServiceClient submit_client;
+        if (agv_id == "agv1") {
+            submit_client = nhandle.serviceClient<osrf_gear::AGVControl>("ariac/agv1");
+        }
+        else if (agv_id == "agv2") {
+            submit_client = nhandle.serviceClient<osrf_gear::AGVControl>("ariac/agv2");
+        }
+        else {
+            ROS_WARN("Invalid AGV ID");
+            return;
+        }
+        osrf_gear::AGVControl submit_srv;
+        submit_srv.request.shipment_type = shipment_name;
+        if (submit_client.call(submit_srv)) {
+            while (!submit_srv.response.success) {
+                submit_client.call(submit_srv);
+            }
+            ROS_INFO("Submitted Shipment %s on %s", shipment_name.c_str(), agv_id.c_str());
+            ROS_INFO("Submitted Message : %s", submit_srv.response.message.c_str());
+        }
+        else {
+            ROS_WARN("Fail to get submission service");
         }
     }
 }

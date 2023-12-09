@@ -14,8 +14,6 @@ find_package(catkin REQUIRED COMPONENTS
   actionlib
   control_msgs
   osrf_gear
-  tf
-  tf2
 )
 
 ## System dependencies are found with CMake's conventions
