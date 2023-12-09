@@ -1,4 +1,5 @@
 # ecse473_f23_axc1293_ariac_entry
+The is a new created repo under the same namespace, the previous old one was discarded because of the missing of tags
 
 ## Package description
 This new repo is a ROS package that contains the project disign & implementation of ARIAC 2019 for ECSE 473 Modern Robot Programming
