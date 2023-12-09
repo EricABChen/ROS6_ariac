@@ -25,3 +25,4 @@ These command will launch the competition
 - Do them seperately to avoid collision
 - Continuously pick up a part and then drop by setting `switch_grip_status` with true and false
 - In this period the program will not tend to ship even if the correct item is picked up, and the for loop will go permenantly
+- The whole process do not rely on the previous lab 6 package, which can be found `https://github.com/EricABChen/ecse473_f23_axc1293_ik_service`
