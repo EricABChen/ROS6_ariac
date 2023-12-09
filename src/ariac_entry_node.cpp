@@ -25,6 +25,7 @@
 
 int count1; // Global cnt for trajectory
 bool checker;
+int axc;
 actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>* tc; //Trajectory
 ros::ServiceClient gclient;// gripper client
 std::queue <osrf_gear::Order> all_orders; // a queue for orders
@@ -33,7 +34,7 @@ std::map <std::string, std::vector<osrf_gear::Model>> all_kits; // map for all t
 sensor_msgs::JointState joint_states; // joints of the current state
 std::map<std::string, double> base_of_bin; // Locations of bin
 
-// Declaration for all Callback Functions
+// Declaration for all Callback Functions // 1293
 void callbk_joint(const sensor_msgs::JointState::ConstPtr &msg);
 void callbk_order(const osrf_gear::Order::ConstPtr &msg);
 void callbk_camera(const osrf_gear::LogicalCameraImage::ConstPtr &msg, const std::string camera);
@@ -216,7 +217,7 @@ trajectory_msgs::JointTrajectory get_trajectory_for_foundation(const geometry_ms
     joint_trajectory.header.stamp = ros::Time::now();
     joint_trajectory.header.frame_id = "/world";
 
-    // properly set the name of the joints
+    // properly set anbang the name of the joints
     joint_trajectory.joint_names.clear();
     joint_trajectory.joint_names.emplace_back("linear_arm_actuator_joint");
     joint_trajectory.joint_names.emplace_back("shoulder_pan_joint");
@@ -336,7 +337,7 @@ void process(ros::NodeHandle& nhandle, const osrf_gear::Order &order, tf2_ros::B
                 set_orientation(goal_pose.pose);
                 auto stay_above = get_trajectory_for_arm(goal_pose.pose, 0.13, 1.5, true); // find trajectory: arm
                 start_trajectory(stay_above, *tc, true);
-                // Start grab process, turn on vacuum
+                // Start granbang process, turn on vacuum
                 switch_grip_status(true);
                 auto goal_trajectory = get_trajectory_for_arm(goal_pose.pose, 0.015, 0.3, true);
                 start_trajectory(goal_trajectory, *tc, false);
@@ -425,7 +426,7 @@ int main(int argc, char **argv) {
     };
     bool service_call_succeeded;
     service_call_succeeded = begin_client.call(begin_comp);
-    // Ensure the status of the competition
+    // axc:Ensure the status of the competition
     if (service_call_succeeded) {
         if (begin_comp.response.success) {
             ROS_INFO("Start Success: %s", begin_comp.response.message.c_str());
