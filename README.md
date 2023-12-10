@@ -14,7 +14,8 @@ In order to run/view this model, the listed dependencies MUST be satisfied:
 Before lauching gazebo, it is necessary to ensure that the following requirements are ALL satisfied:
 - ROS(Noetic), ARIAC 2019 and ecse_373_ariac are properlyl installed on a system running Ubuntu 20.04
 - Download this package into your catkin workspace `~/<catkin_workspace>/src/`
-- Before building this project, make sure to Source ecse_373_ariac fisrt: `source ~/ecse_373_ariac/devel/setup.bash`
+- Before building this project, make sure to Source ecse_373_ariac fisrt: 
+	`source ~/ecse_373_ariac/devel/setup.bash`
 - Build the package with `catkin_make`
 
 ### Launch ARIAC 2019
