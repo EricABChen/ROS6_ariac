@@ -30,10 +30,11 @@ These command will launch the competition
 
 ### Theory of Operation
 
-This project contains a report which explains the theory of operation, conbines with the system's block diagram. `Theory of Operation.pdf` can be found at the main repo.
+This project contains a report which explains the theory of operation, conbines with the system's block diagram. `Theory_of_Operation.pdf` can be found at the main repo.
 
 ### Known Issue
 - For unknown reasons, the program is not 100% stable on my laptop, in rare cases, the program finds no possible solution and will crash into something. This situation occurs around 10% during self-testing.
 - The ecse_373_ariac comes with different environment configurations the they are incompatible with each other
 - This project should use: `roslaunch ecse_373_ariac ecse_373_ariac.launch`
 - And should NOT use `roslaunch ecse_373_ariac ecse_373_ariac.launch python:=false`
+- Make sure the `include` folder exists before building `catkin_make` 
