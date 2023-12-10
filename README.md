@@ -27,5 +27,9 @@ Before lauching gazebo, it is necessary to ensure that the following requirement
 
 These command will launch the competition
 
+### Theory of Operation
+
+This project contains a report which explains the theory of operation, conbines with the system's block diagram. `Theory of Operation.pdf` can be found at the main repo.
+
 ### Known Issue
 For unknown reasons, the program is not 100% stable on my laptop, in rare cases, the program finds no possible solution and will crash into something. This situation occurs around 10% during self-testing.
